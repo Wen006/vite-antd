@@ -1,69 +1,68 @@
-import { Button } from 'antd'
-import React, { useState } from 'react'
-// import Loadable from 'react-loadable'
+/*
+ * @Author: Jackstraw
+ * @Date: 2021-05-29 18:22:33
+ * @Description: 
+ * @FilePath: /vitepro/vite-react/src/App.tsx
+ * 好好学习、天天向上 >> 1432316105@qq.com
+ */
+import { Button, ConfigProvider } from 'antd'
+import { Locale } from 'antd/lib/locale-provider';
+import React,{ useState } from 'react'
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
-  Link
 } from "react-router-dom"
+import { getRoutes } from './config/routes';
+import BasicLayout from './layouts/BasicLayout';
+import { Languages } from './utils/app.types'
 
-const AsyncComponent= (ele:React.ReactElement) => {
+import { getLang, getLocale } from './utils/web.util';
 
+const Login: any = React.lazy(() => import('./pages/sys/login/Login'));
+const NoFound: any = React.lazy(() => import('./pages/common/error/404'));
+
+const routes = getRoutes();
+
+interface AppState {
+  language: Languages,
+  loading: boolean,
+  locale: Locale,
+  theme: 'default' | 'dark'
 }
 
-const Login = React.lazy(()=>import('./pages/sys/login/Login'));
-
-const routes = [
-  {
-    url: '/one',
-    component: () => import("./pages/exam/ExOne"),
-  },
-  {
-    url: '/two',
-    component: () => import("./pages/exam/ExTwo"),
-  }, 
-  {
-    url: '/three',
-    component: () => import("./pages/exam/ExThree"),
-  }
-].map(it => { 
-  const Ele = React.lazy(it.component)
-  return {
-    ...it,
-    component: () => <React.Suspense fallback={<div>{it.url}</div>}><Ele></Ele></React.Suspense>,
-  }
-})
-
-
 function App() {
-  return <div>
-    <div className="header">header</div>
-    <div className="body">
-      <Button>hello</Button>
-      <Router>
-      {
-        routes.map(i=>{
-          return <Link to={i.url} key={i.url}>{i.url}</Link>
-        })
-      }
-        <Switch>
-          <Route path="/login" render={p=>{
-            console.log("hello====")
-            return <React.Suspense fallback={<div>loading</div>}><Login {...p}></Login></React.Suspense>
-          }}></Route>
-          {
-            routes.map(i => {
-              return <Route key={i.url} path={i.url} component={i.component}>
-                {/* <i.component></i.component> */}
-              </Route>
-            })
-          }
-        </Switch>
-      </Router>
-    </div>
-  </div>
+  const appInitState: AppState = {
+    language: getLang(),
+    locale: getLocale(),
+    loading: false,
+    theme: 'default'
+  }
+  const [appState, setAppState] = useState<AppState>(appInitState)
+
+  const app = {
+    appState,
+    setAppState,
+  }
+
+  return <ConfigProvider locale={appState.locale}>
+    <Router>
+      <Switch>
+        <Redirect exact from="/" path="/" to="/login"></Redirect>
+        <Route path="/login" exact render={p => {
+          return <React.Suspense fallback={<div>加载登录页面</div>}><Login {...p} app={app}></Login></React.Suspense>
+        }}></Route>
+        <BasicLayout
+          app={app}
+          path="/"
+          routes={routes}
+        >
+        </BasicLayout>
+        <Redirect path="*" to="/404"></Redirect>
+      </Switch>
+    </Router>
+  </ConfigProvider>
 }
 
 export default App

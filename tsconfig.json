@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "types": ["vite/client"],
+    "types": ["vite/client","node", "lodash"],
     "allowJs": false,
     "skipLibCheck": false,
     "esModuleInterop": false,
@@ -18,16 +18,13 @@
     "removeComments": true, // 是否移除注释
     "jsx": "react"
   },
+  
   "paths": { // 指定模块的路径，和baseUrl有关联，和webpack中resolve.alias配置一样
-    // "src": [ //指定后可以在文件之直接 import * from 'src';
-    //   "./src"
+    "@/*": ["src/*"],
+    "@/utils/*": ["/src/utils/*"],
+    // "~/*": [ 
+    //   "./*"
     // ],
-    "@": [
-      "./src/*"
-    ],
-    "~": [ 
-      "./*"
-    ],
   },
-  "include": ["./src"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx"],
 }
