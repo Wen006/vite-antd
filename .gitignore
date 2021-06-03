@@ -1,0 +1,13 @@
+
+##### workspace
+.idea
+.vscode
+.iml
+dist
+.DB_store
+package-lock.json
+yarn.lock
+
+##### source mag
+.git
+.svn
