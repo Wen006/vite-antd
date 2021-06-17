@@ -2,14 +2,14 @@
  * @Author: Jackstraw
  * @Date: 2021-05-29 18:31:32
  * @Description: 用于全局后台请求配置
- * @FilePath: /vite-react/src/services/services/service.handler.ts
+ * @FilePath: /vite-react/src/services/service.handler.ts
  * 好好学习、天天向上 >> 1432316105@qq.com
  */
 
 import logger from '@/utils/logger';
 import request from '@/utils/request';
 import { getMethodConfig, MethodOption, RequestMethod } from './config';
-import { baseUrl } from '../../utils/app.config'
+import { baseUrl } from '@/utils/app.config'
 import { assign } from 'lodash';
 
 const log = logger.getLogger('services:services.handler.ts');

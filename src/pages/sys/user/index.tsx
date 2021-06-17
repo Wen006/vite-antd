@@ -3,7 +3,7 @@ import { PlusOutlined, EllipsisOutlined } from '@ant-design/icons';
 import { Button, Tag, Space, Menu, Dropdown } from 'antd';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable, { TableDropdown } from '@ant-design/pro-table';
-import { callRpc } from '@/services/services/service.handler';
+import { callRpc } from '@/services/service.handler';
 
 type GithubIssueItem = {
   url: string;
