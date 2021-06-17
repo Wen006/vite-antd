@@ -10,7 +10,7 @@ import { Route, RouteProps } from "react-router";
 import { getSessionUser } from "../utils/web.util";
 import { Layout, Menu, Breadcrumb } from 'antd';
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
-import { callRpc } from "../services/services/service.handler";
+import { callRpc } from "@/services/service.handler";
 import { Link } from "react-router-dom";
 
 const { SubMenu } = Menu;

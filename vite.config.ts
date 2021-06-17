@@ -28,7 +28,6 @@ export default defineConfig({
         {
           libName: "antd",
           style: (name) => {
-            console.log(`name======>`, name)
             return `antd/lib/${name}/style/index.css`;
           },
         }

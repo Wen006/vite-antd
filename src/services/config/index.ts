@@ -2,19 +2,10 @@
  * @Author: Jackstraw
  * @Date: 2021-05-29 18:36:00
  * @Description: 用于配置全局请求
- * "KEY请大写唯一(服务模块_具体表_功能)":{
- *      "url":"/system/user/listByDto", //后台对应restapi url
- *      "method":"POST",                //请求方式 formpost，delete,post,get
- *      "header":['Accept': 'application/json'], // 可以设置请求的头
- *      "mocktable":"SM_USER",        //用户模拟数据的找mocktable的 这里的表明一定和mock dbDao.js配置的要一致
- *      "mockhandler":"list",           //配置该项mock会统一处理 可选【list(翻页),list2(无翻页)),saveorupdate,delete,getone】
- *      "auth":"wennn",                 //作者
- *      “desc":"用户列表查询"             //方法描述
- *  },
- * @FilePath: /vite-react/src/services/services/config/index.ts
  * 好好学习、天天向上 >> 1432316105@qq.com
  */
 
+// 请求方式
 export enum RequestMethod {
     GET='GET',
     POST='POST',
@@ -24,16 +15,16 @@ export enum RequestMethod {
 }
 
 export interface MethodOptionAll extends MethodOption{
-    "mock-table"?:undefined|string,
-    "mock-handler"?:undefined|string,
-    "auth":string,
-    "desc":string,
+    "mock-table"?:undefined|string,     // 用户模拟数据的找mocktable的 这里的表明一定和mock dbDao.js配置的要一致
+    "mock-handler"?:undefined|string,   // 配置该项mock会统一处理 可选【list(翻页),list2(无翻页)),saveorupdate,delete,getone】
+    "auth":string,   // 作者
+    "desc":string,   // 方法描述
 }
 
 export interface MethodOption{
-    "url": string,
-    "method": RequestMethod,
-    "headers"?: any,
+    "url": string,              // 后台对应restapi url
+    "method": RequestMethod,    // 请求方式 formpost，delete,post,get
+    "headers"?: any,            // 请求头
 }
 
 export interface ServiceConfig{

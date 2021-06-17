@@ -2,13 +2,12 @@
  * @Author: Jackstraw
  * @Date: 2021-05-28 11:25:05
  * @Description: 
- * @FilePath: /vitepro/vite-react/src/pages/sys/login/Login.tsx
  * 好好学习、天天向上 >> 1432316105@qq.com
  */
 import React, { useState } from 'react';
 import { Form, Input, Button, Checkbox, Select, notification, message } from 'antd';
 import './index.less'
-import { callRpc } from '@/services/services/service.handler';
+import { callRpc } from '@/services/service.handler';
 import { Languages } from '@/utils/app.types';
 import { getLang } from '@/utils/web.util';
 import { setSessionUser } from '@/utils/web.util';
