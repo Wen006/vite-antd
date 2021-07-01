@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
+    "@ant-design/pro-layout": "^6.21.0",
     "@ant-design/pro-table": "^2.39.1",
     "antd": "^4.16.1",
     "axios": "^0.21.1",

@@ -7,7 +7,7 @@
  */
 import { Button, ConfigProvider } from 'antd'
 import { Locale } from 'antd/lib/locale-provider';
-import React,{ useState } from 'react'
+import React, { useState } from 'react'
 import {
   BrowserRouter as Router,
   Switch,
@@ -15,7 +15,8 @@ import {
   Redirect,
 } from "react-router-dom"
 import { getRoutes } from './config/routes';
-import BasicLayout from './layouts/BasicLayout';
+import AppLayout from './layouts/AppLayout';
+import BasicLayout from './layouts/AppLayout';
 import { Languages } from './utils/app.types'
 
 import { getLang, getLocale } from './utils/web.util';
@@ -53,12 +54,12 @@ function App() {
         <Route path="/login" exact render={p => {
           return <React.Suspense fallback={<div>加载登录页面</div>}><Login {...p} app={app}></Login></React.Suspense>
         }}></Route>
-        <BasicLayout
+        <AppLayout
           app={app}
           path="/"
           routes={routes}
         >
-        </BasicLayout>
+        </AppLayout>
         <Redirect path="*" to="/404"></Redirect>
       </Switch>
     </Router>

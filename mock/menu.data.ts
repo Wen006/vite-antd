@@ -49,6 +49,12 @@ export default [
                 "name":"List",
                 "icon":"",
                 "url":"/exam/list/list-1"
+            },
+            {
+                "id":232,
+                "name":"ListA",
+                "icon":"",
+                "url":"/exam/list/list-122"
             }
         ]
     },

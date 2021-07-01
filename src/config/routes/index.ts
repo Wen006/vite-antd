@@ -9,6 +9,7 @@ import React from "react";
 import { RouteConfig } from "./types";
 import exam from "./exam";
 import sys from "./sys";
+import common from './common'
 
 const LazyComponent = (component: any) => {
   return React.lazy(component);
@@ -17,21 +18,7 @@ const LazyComponent = (component: any) => {
 const routes: Array<RouteConfig> = [
   ...sys,
   ...exam,
-  {
-    url: "/403",
-    needAuth: false,
-    component: () => import("@/pages/common/error/403"),
-  },
-  {
-    url: "/404",
-    needAuth: false,
-    component: () => import("@/pages/common/error/404"),
-  },
-  {
-    url: "/500",
-    needAuth: false,
-    component: () => import("@/pages/common/error/500"),
-  },
+  ...common,
   // {
   //   url: "/*",
   //   needAuth: false,
