@@ -8,11 +8,13 @@ import React, { useState } from 'react';
 import { Form, Input, Button, Checkbox, Select, notification, message } from 'antd';
 import './index.less'
 import { callRpc } from '@/services/service.handler';
-import { Languages } from '@/utils/app.types';
+import { Languages } from '@/core/app.types';
 import { getLang } from '@/utils/web.util';
 import { setSessionUser } from '@/utils/web.util';
 import { box } from '@/componets/notice';
+import { setLang } from '../../../utils/web.util';
 const { Option } = Select;
+
 const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
@@ -21,7 +23,7 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-const Login: React.FC<any> = (props) => {
+const Login: React.FC<any> = (props: any) => {
 
   const [submitting, setSubmitState] = useState<boolean>(false)
 
@@ -33,7 +35,7 @@ const Login: React.FC<any> = (props) => {
     }).then((data: any) => {
       if (data.success) {
         setSessionUser(values.username)
-       
+
         setTimeout(() => {
           setSubmitState(false)
           props.history.push('/home')
@@ -42,7 +44,7 @@ const Login: React.FC<any> = (props) => {
         setSessionUser("")
         box.error(data.msg)
       }
-      
+
     })
   };
 
@@ -50,17 +52,17 @@ const Login: React.FC<any> = (props) => {
     console.log('Failed:', errorInfo);
   };
 
-  function handleChange(value) {
+  function handleChange(value: Languages) {
     console.log(`selected ${value}`);
+    setLang(value);
   }
 
 
   return (
     <div className="login-main">
-      <Select style={{ width: 120 }}>
+      <Select style={{ width: 120 }} onChange={handleChange}>
         {
           Object.keys(Languages).map(it => {
-            console.log(`it`, it)
             return <Option key={it} value={it}>{it}</Option>
           })
         }

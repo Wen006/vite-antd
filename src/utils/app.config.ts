@@ -5,9 +5,13 @@
  * @FilePath: /my-antd/src/utils/app.config.ts
  * 好好学习、天天向上 >> 1432316105@qq.com
  */
-
-export const baseUrl:string =  "/api"
-
+// import konph from 'konph'
+// const config = konph({
+//   'some-conf-item': {
+//     // Default item value.
+//     def: 'foobar'
+//   }
+// })
 export default {
-    
-}
+    baseUrl:"/api"
+};

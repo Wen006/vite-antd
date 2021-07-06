@@ -1,10 +1,13 @@
-/**
- * logger模块
- * 错误，异常等地方都应输入日志，给出提示
+/*
+ * @Author: Jackstraw
+ * @Date: 2021-05-30 09:19:42
+ * @Description: 日志打印
+ * 好好学习、天天向上 >> 1432316105@qq.com
  */
 
 /* eslint-disable no-console */
 import { debounce, throttle, defaults } from 'lodash'
+import { parse } from 'qs';
 
 type Level = 'log' | 'info' | 'warn' | 'error'
 

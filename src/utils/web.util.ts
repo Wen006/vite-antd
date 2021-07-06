@@ -7,7 +7,7 @@
  */
 
 import { APP_KEY, LANGUAGE_KEY,USER_KEY } from "./app.constant";
-import { Languages } from "./app.types";
+import { Languages } from "../core/app.types";
 import zhCN from 'antd/lib/locale/zh_CN';
 import jaJP from 'antd/lib/locale/ja_JP';
 import enUS from 'antd/lib/locale/en_US';
@@ -28,7 +28,7 @@ export const getLang = ():Languages =>{
 }
 
 export const setLang = (lang:Languages):Languages =>{
-    setStoreItem(perSetKey(LANGUAGE_KEY),lang);
+    setStoreItem(LANGUAGE_KEY,lang);
     return lang;
 }
 

@@ -1,9 +1,8 @@
 import React, { PureComponent, useState, useEffect } from 'react';
-import { Button, Descriptions, Result, Avatar, Space, Statistic } from 'antd';
-import { LikeOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons';
-
-import type { BasicLayout, MenuDataItem, ProSettings } from '@ant-design/pro-layout';
-import ProLayout, { PageContainer, SettingDrawer } from '@ant-design/pro-layout';
+import { Avatar } from 'antd';
+import { SmileOutlined, UserOutlined } from '@ant-design/icons';
+import type { MenuDataItem, ProSettings } from '@ant-design/pro-layout';
+import ProLayout, { SettingDrawer } from '@ant-design/pro-layout';
 import defaultProps from './defaultProps';
 import { RouteConfig } from '../config/routes/types';
 import PageRender from './PageRender';
@@ -108,7 +107,7 @@ const StandLayout: React.FC<{}> = ({ children, ...other }): React.ReactElement =
         >
             <ProLayout
                 // {...defaultProps}
-                menuHeaderRender={(logo,title)=>{
+                menuHeaderRender={(logo, title) => {
                     return <a>{logo}<h1>Vita Antd</h1></a>
                 }}
                 title={"hello"}

@@ -9,9 +9,9 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import lodash from "lodash";
 import { notification } from "antd";
-import hash from "hash.js";
-import logger from "./logger";
-import { IResult } from "./app.types";
+import hash from "hash.js"; 
+import { R } from "../core/app.types";
+ 
 
 const codeMessage: any = {
   200: "服务器成功返回请求的数据。",
@@ -32,14 +32,14 @@ const codeMessage: any = {
 };
 
 
-const failedR: IResult = {
+const failedR: R = {
   success: false,
   data: {},
   msg: "失败了",
   code: "500",
 };
 
-const successR: IResult = {
+const successR: R = {
   success: true,
   data: {},
   msg: "成功了",

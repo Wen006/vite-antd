@@ -9,12 +9,13 @@
 
 import { MockMethod } from "vite-plugin-mock";
 import menuData from "./menu.data";
-import { IResult } from "../src/utils/app.types";
+import { R } from "../src/core/app.types";
 import { userList } from "./mock.data";
+import { IncomingMessage, ServerResponse } from "http";
 
 const sessionContext = {};
 
-const ok = (data: any): IResult => {
+const ok = (data: any): R => {
   return {
     msg: "调用成功",
     code: "200",
@@ -22,7 +23,7 @@ const ok = (data: any): IResult => {
     data: data,
   };
 };
-const fail = (msg?: any): IResult => {
+const fail = (msg?: any): R => {
   return {
     msg: msg || "失败了",
     code: "500",
@@ -44,7 +45,7 @@ export default [
   {
     url: `${context}/sys/user/login`,
     method: "post",
-    response: ({ query, body, headers, ...other }) => {
+    response: ({ query:{}, body:{}, headers:{}, ...other }) => {
       const params = { ...query, ...body };
       let user = undefined;
       userList.some((u) => {
@@ -56,5 +57,21 @@ export default [
       });
       return user ? ok(user) : fail("账号或者密码不对");
     },
+  },
+  {
+    url: `${context}/sys/user/list`,
+    method: "get",
+    rawResponse:async (req:IncomingMessage,res:ServerResponse)=>{
+      let reqbody = '';
+      await new Promise((resolve) => {
+        req.on('data', (chunk) => {
+          reqbody += chunk;
+        });
+        req.on('end', () => resolve(undefined));
+      });
+      res.setHeader('Content-Type', 'text/plain');
+      res.statusCode = 200;
+      res.end(`hello, ${reqbody}`);
+    }
   },
 ] as MockMethod[];

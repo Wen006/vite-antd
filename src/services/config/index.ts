@@ -5,30 +5,10 @@
  * 好好学习、天天向上 >> 1432316105@qq.com
  */
 
-// 请求方式
-export enum RequestMethod {
-    GET='GET',
-    POST='POST',
-    DEL='DELETE',
-    FORM_POST = "FORM_POST",
-    PUT='PUT'
-}
-
-export interface MethodOptionAll extends MethodOption{
-    "mock-table"?:undefined|string,     // 用户模拟数据的找mocktable的 这里的表明一定和mock dbDao.js配置的要一致
-    "mock-handler"?:undefined|string,   // 配置该项mock会统一处理 可选【list(翻页),list2(无翻页)),saveorupdate,delete,getone】
-    "auth":string,   // 作者
-    "desc":string,   // 方法描述
-}
-
-export interface MethodOption{
-    "url": string,              // 后台对应restapi url
-    "method": RequestMethod,    // 请求方式 formpost，delete,post,get
-    "headers"?: any,            // 请求头
-}
+import { MethodOption, MethodOptionAll, RequestMethod } from "../../core/rpc/types";
 
 export interface ServiceConfig{
-    [k:string]: MethodOptionAll 
+    [k:string]: MethodOptionAll
 }
 
 const configs:ServiceConfig = {
@@ -62,18 +42,6 @@ const configs:ServiceConfig = {
         "auth":"wennn",
         "desc":"菜单"
     },
-}
-
-export const getMethodConfig = (key:string):MethodOption=>{
-    const config:MethodOptionAll = configs[key];
-    if(config){
-        return {
-            "url":config.url,
-            "method":config.method,
-            "headers":config.headers,
-        };
-    }
-    throw new Error("找不到服务配置项 >> "+key)
 }
 
 export default configs;

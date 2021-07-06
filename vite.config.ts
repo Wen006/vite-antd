@@ -37,6 +37,10 @@ export default defineConfig({
       mockPath: 'mock',
       localEnabled: true,
       logger: true,
+      ignore: (finame:string)=>{
+        console.log(`finame`, finame)
+        return finame.indexOf(".data") > -1||finame.indexOf("utils/") >-1;
+      }
     }),
   ],
   css: {

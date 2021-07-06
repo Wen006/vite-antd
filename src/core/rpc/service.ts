@@ -3,17 +3,17 @@
  * @Date: 2021-05-29 18:31:32
  * @Description: 用于全局后台请求配置
  * 好好学习、天天向上 >> 1432316105@qq.com
- */
-import Logger from "chivy";
+ */ 
 import { MethodOption, RequestMethod, CallOpts, ServiceConfig, MethodOptionAll,RequestOpts } from "./types";
-import { assign } from "lodash";
 import request from "./request";
-import qs from "qs";
+import {stringify} from "qs";
+import logger from "../utils/logger";
 
-const log = new Logger("core:rpc.service");
+const log = logger.getLogger("core.rpc:service")
 
 export interface RpcServiceProps {
-  config: ServiceConfig;
+  config: ServiceConfig,
+  baseUrl?: string,
 }
 
 /**
@@ -63,12 +63,12 @@ export default class RpcService {
     // 对form请求处理
     if (RequestMethod.FORM_POST == reqOpt.method) {
       reqOpt.method = RequestMethod.POST;
-      reqOpt.headers = assign(config.headers, { "content-type": "application/x-www-form-urlencoded" });
+      reqOpt.headers = Object.assign(reqOpt.headers, { "content-type": "application/x-www-form-urlencoded" });
       
       if(params){
-        url = url + (url.includes("?")?qs.stringify(params):`?${qs.stringify(params)}`);
+        url = url + (url.includes("?")?stringify(params):`?${stringify(params)}`);
       }
-      reqOpt.data = qs.stringify(reqOpt.data||{});
+      reqOpt.data = stringify(reqOpt.data||{});
     }
 
     // 对于url占位符的参数处理
@@ -80,7 +80,6 @@ export default class RpcService {
       }
     }
 
-    console.log(`url,data,params`, url,data,params)
     return request(url, {
       method: reqOpt.method,
       headers: reqOpt.headers || {},

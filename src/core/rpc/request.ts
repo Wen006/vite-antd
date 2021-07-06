@@ -1,6 +1,5 @@
 
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import lodash from "lodash";
+import axios, { AxiosRequestConfig } from "axios";
 import { notification } from "antd";
 import hash from "hash.js";
 import { R } from "../app.types";
@@ -44,14 +43,10 @@ const defaultAxiosCfg: any = {
   timeout: 1800000,
 };
 
-const ERROR_MSG: any = {
-  "Network Error": "请检查一下网络",
-};
-
 // 添加请求拦截器
 axios.interceptors.request.use(
   (conf) => {
-    lodash.assign(conf.headers, {
+    Object.assign(conf.headers, {
       "Accept-Language": "zh-CN",
       // 'Access-Token':'1111111',
     });
@@ -110,6 +105,7 @@ const cachedSave = (response: any, hashcode: string) => {
   return response;
 };
 
+
 /**
  * @description 返回原生的axios
  * @param {请求url} url
@@ -120,9 +116,9 @@ export function fetch(url: string, options: AxiosRequestConfig): Promise<any> {
   const { method = "GET", data, params, headers } = options;
 
   // axios 配置
-  const comCfg = lodash.assign({}, defaultAxiosCfg);
+  const comCfg = Object.assign({}, defaultAxiosCfg);
   if (headers) {
-    comCfg.headers = lodash.assign(comCfg.headers, headers);
+    comCfg.headers = Object.assign(comCfg.headers, headers);
   }
   
   switch (method) {
@@ -171,7 +167,7 @@ export default function request(
 ): Promise<any> {
   const { data, params } = option;
 
-  const paramsAll = lodash.assign({}, data, params);
+  const paramsAll = Object.assign({}, data, params);
   /**
    * Produce fingerprints based on url and parameters
    * Maybe url has the same parameters
@@ -207,7 +203,7 @@ export default function request(
       // `config` 是为请求提供的配置信息
       const { status, statusText, data } = response;
       if (200 != status) {
-        const failResult = lodash.assign({}, failedR, {
+        const failResult = Object.assign({}, failedR, {
           code: status,
           data: data,
         });
