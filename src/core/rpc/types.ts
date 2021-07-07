@@ -10,7 +10,8 @@ export enum RequestMethod {
   POST = "POST",
   DEL = "DELETE",
   FORM_POST = "FORM_POST",
-  PUT = "PUT"
+  PUT = "PUT", 
+  PATH="PATH"
 }
 
 export interface RequestOpts {
@@ -24,7 +25,7 @@ export interface RequestOpts {
 
 export interface MethodOptionAll extends MethodOption {
   "mock-table"?: undefined | string; // 用户模拟数据的找mocktable的 这里的表明一定和mock dbDao.js配置的要一致
-  "mock-handler"?: undefined | string; // 配置该项mock会统一处理 可选【list(翻页),list2(无翻页)),saveorupdate,delete,getone】
+  "mock-handler"?: 'list'|'del'|'qp'|'update'|'get'; // 配置该项mock会统一处理 可选【list(翻页),list2(无翻页)),saveorupdate,delete,getone】
   auth: string; // 作者
   desc: string; // 方法描述
 }

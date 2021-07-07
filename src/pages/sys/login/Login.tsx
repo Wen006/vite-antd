@@ -95,7 +95,7 @@ const Login: React.FC<any> = (props: any) => {
         </Form.Item>
 
         <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit" loading={submitting}>
+          <Button type="primary" htmlType="submit" >
             登录
           </Button>
         </Form.Item>

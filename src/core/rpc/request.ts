@@ -2,6 +2,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { notification } from "antd";
 import hash from "hash.js";
+import { assign } from 'lodash'
 import { R } from "../app.types";
 
 const codeMessage: any = {
@@ -45,25 +46,25 @@ const defaultAxiosCfg: any = {
 
 // 添加请求拦截器
 axios.interceptors.request.use(
-  (conf) => {
-    Object.assign(conf.headers, {
+  (conf:any) => {
+    assign(conf.headers, {
       "Accept-Language": "zh-CN",
       // 'Access-Token':'1111111',
     });
     // 在发送请求之前做些什么
     return conf;
   },
-  (error) =>
+  (error:any) =>
     // 对请求错误做些什么
     Promise.reject(error)
 );
 
 // 添加响应拦截器
 axios.interceptors.response.use(
-  (response) =>
+  (response:any) =>
     // 对响应数据做点什么
     response,
-  (error) =>
+  (error:any) =>
     // 对响应错误做点什么
     Promise.reject(error)
 );
@@ -86,7 +87,6 @@ const checkStatus = (response:any) => {
 
 // 保存缓存
 const cachedSave = (response: any, hashcode: string) => {
-  console.log(`response,hashcode`, response,hashcode)
   /**
    * Clone a response data and store it in sessionStorage
    * Does not support data other than json, Cache only json
@@ -114,11 +114,11 @@ const cachedSave = (response: any, hashcode: string) => {
  */
 export function fetch(url: string, options: AxiosRequestConfig): Promise<any> {
   const { method = "GET", data, params, headers } = options;
-
+ 
   // axios 配置
-  const comCfg = Object.assign({}, defaultAxiosCfg);
+  const comCfg = assign({}, defaultAxiosCfg);
   if (headers) {
-    comCfg.headers = Object.assign(comCfg.headers, headers);
+    comCfg.headers = assign(comCfg.headers, headers);
   }
   
   switch (method) {
@@ -166,8 +166,7 @@ export default function request(
   expirys: false | number = false
 ): Promise<any> {
   const { data, params } = option;
-
-  const paramsAll = Object.assign({}, data, params);
+  const paramsAll = assign({}, data, params);
   /**
    * Produce fingerprints based on url and parameters
    * Maybe url has the same parameters
@@ -194,7 +193,6 @@ export default function request(
     .then(checkStatus)
     // .then((response) => cachedSave(response, hashcode))
     .then((response) => {
-      console.log(`response`, response)
       // 这个是业务后台异常处理过了 正常返回moduleReturn 结构
       // `data` 由服务器提供的响应
       // `status` 来自服务器响应的 HTTP 状态码
@@ -203,7 +201,7 @@ export default function request(
       // `config` 是为请求提供的配置信息
       const { status, statusText, data } = response;
       if (200 != status) {
-        const failResult = Object.assign({}, failedR, {
+        const failResult = assign({}, failedR, {
           code: status,
           data: data,
         });
@@ -219,28 +217,21 @@ export default function request(
       return data;
     })
     .catch((error) => {
-      console.log(`error.message`, error.message)
-      console.log(`error.data`, error.data)
-      console.log("1",error.data);
-      console.log(error.status);
-      console.log(error.headers);
+      const result = assign({},failedR,{
+        msg:error.message, 
+      })
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        console.log("1",error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
+        result.code = error.response.status||result.code;
+        result.msg = codeMessage[result.code] || result.msg;
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
         // http.ClientRequest in node.js
-        console.log("2",error.request);
-        console.log(`error`, error)
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
       }
-      console.log(error.config);
-      return failedR; 
+      return result; 
     });
 }

@@ -8,26 +8,30 @@ import { MethodOption, RequestMethod, CallOpts, ServiceConfig, MethodOptionAll,R
 import request from "./request";
 import {stringify} from "qs";
 import logger from "../utils/logger";
+import { assign } from "lodash";
 
 const log = logger.getLogger("core.rpc:service")
 
 export interface RpcServiceProps {
   config: ServiceConfig,
   baseUrl?: string,
+  automock: boolean;
 }
 
 /**
  *  后台rpc调用封装
  */
 export default class RpcService {
-  config: ServiceConfig;
+  props: RpcServiceProps;
 
   constructor(props: RpcServiceProps) {
-    this.config = props.config;
-    if (!this.config) {
+    this.props = props; 
+    if (!this.props.config) {
       log.warn("config not assign");
-      this.config = {};
+      this.props.config = {};
     }
+    this.props.baseUrl = props.baseUrl||''
+    this.props.automock = props.automock == true; 
   }
 
   /**
@@ -36,7 +40,7 @@ export default class RpcService {
    * @returns 
    */
   getConfig = (key: string): MethodOptionAll => {
-    const config = this.config[key];
+    const config = this.props.config[key];
     if(!config){
       log.error("后台请求配置不存在 ",key)
     }
@@ -50,7 +54,7 @@ export default class RpcService {
    */
   callRpc = async (options: CallOpts): Promise<any> => {
     const { key, params, data, pathVari } = options;
-    const config: MethodOption = this.getConfig(key);
+    const config: MethodOptionAll = this.getConfig(key);
     log.info("服务配置: {}", config);
     const reqOpt:RequestOpts = {
       method: config.method,
@@ -80,7 +84,13 @@ export default class RpcService {
       }
     }
 
-    return request(url, {
+    if(config["mock-table"]){
+      assign(reqOpt.headers,{
+        'mocktable':config["mock-table"]
+      })
+    }
+
+    return request(this.props.baseUrl + url, {
       method: reqOpt.method,
       headers: reqOpt.headers || {},
       data: reqOpt.data,

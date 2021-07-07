@@ -5,12 +5,8 @@
  * 好好学习、天天向上 >> 1432316105@qq.com
  */
 
-import { MethodOption, MethodOptionAll, RequestMethod } from "../../core/rpc/types";
-
-export interface ServiceConfig{
-    [k:string]: MethodOptionAll
-}
-
+import { RequestMethod, ServiceConfig } from "../../core/rpc/types";
+ 
 const configs:ServiceConfig = {
     "sys.user.login": {
         "method":RequestMethod.FORM_POST,
@@ -28,6 +24,8 @@ const configs:ServiceConfig = {
         "method":RequestMethod.GET,
         "url":"/users",
         "auth":"wennn",
+        "mock-handler":"list",
+        "mock-table":"SM_USER",
         "desc":"获取用户"
     },
     "sys.user.currentUser": {

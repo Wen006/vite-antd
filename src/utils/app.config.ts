@@ -11,7 +11,12 @@
 //     // Default item value.
 //     def: 'foobar'
 //   }
+
+import { setConfig } from "../core/utils/logger";
+
 // })
 export default {
     baseUrl:"/api"
 };
+
+setConfig({enable:true})

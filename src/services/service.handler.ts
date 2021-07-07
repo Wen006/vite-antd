@@ -18,7 +18,7 @@ import { CallOpts, MethodOptionAll } from '../core/rpc/types';
 
 const rpcInstance = new RpcService({
     baseUrl: appConfig.baseUrl,
-    config:config,
+    config: config,
 });
 
 export const callRpc = async (options:CallOpts):Promise<any> =>{

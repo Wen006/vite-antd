@@ -9,13 +9,12 @@
 
 import { MockMethod } from "vite-plugin-mock";
 import menuData from "./menu.data";
-import { R } from "../src/core/app.types";
 import { userList } from "./mock.data";
 import { IncomingMessage, ServerResponse } from "http";
-
+ 
 const sessionContext = {};
 
-const ok = (data: any): R => {
+const ok = (data: any): any => {
   return {
     msg: "调用成功",
     code: "200",
@@ -23,7 +22,7 @@ const ok = (data: any): R => {
     data: data,
   };
 };
-const fail = (msg?: any): R => {
+const fail = (msg?: any): any => {
   return {
     msg: msg || "失败了",
     code: "500",
@@ -45,7 +44,7 @@ export default [
   {
     url: `${context}/sys/user/login`,
     method: "post",
-    response: ({ query:{}, body:{}, headers:{}, ...other }) => {
+    response: ({ query, body, headers, ...other }) => {
       const params = { ...query, ...body };
       let user = undefined;
       userList.some((u) => {
@@ -61,7 +60,7 @@ export default [
   {
     url: `${context}/sys/user/list`,
     method: "get",
-    rawResponse:async (req:IncomingMessage,res:ServerResponse)=>{
+    rawResponse: async (req:IncomingMessage,res:ServerResponse)=>{
       let reqbody = '';
       await new Promise((resolve) => {
         req.on('data', (chunk) => {

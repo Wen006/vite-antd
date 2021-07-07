@@ -47,9 +47,8 @@ export function queryByParams(req:any,resp:any){
     writeOk(resp, newData)
 }
 
-export function comList(req, resp) {
-    const { body, query, headers,url } = req
-    const { mocktable } = headers
+export function comList(req, resp, mocktable) {
+    const { body, query, headers,url } = req 
     const { pageNo = 1, pageSize = 10, sorter, ...other } = { ...body, ...query } // sorter :"menuCode_descend" ,"menuCode_ascend"
     other.deletedFlag = "0"
     // let menuDate;
@@ -77,10 +76,9 @@ export function comList(req, resp) {
     writeOk(resp, retDatas)
 }
 
-export function comSaveOrUpdate(req, resp) {
+export function comSaveOrUpdate(req, resp, mocktable) {
     const { body, query, headers,url } = req
-    const { ...params } = {...body,...query}
-    const { mocktable } = headers
+    const { ...params } = {...body,...query} 
     const ret = saveOrUpdate(mocktable,params)
     if(ret){
         writeOk(resp,ret)
@@ -90,10 +88,9 @@ export function comSaveOrUpdate(req, resp) {
 }
 
 // 删除通过id 改deletedFlag=‘1’
-export function comDel(req, resp) {
+export function comDel(req, resp,mocktable) {
     const { body, query, url,headers } = req
     const  ids  = body
-    const { mocktable } = headers
     const ret = deleteItem(mocktable,ids)
     if(ret > 0){
         writeOk(resp,ret)
@@ -103,10 +100,9 @@ export function comDel(req, resp) {
 }
 
 // 通过id查询
-export function comGetOne(req, resp) {
+export function comGetOne(req, resp,mocktable) {
     const { body, query, url,headers } = req
     const { id ,...other} = { ...body, ...query }
-    const { mocktable } = headers
     const item = getOne(mocktable,id)
     if(item){
         writeOk(resp,item)

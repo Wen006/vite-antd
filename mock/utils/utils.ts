@@ -7,6 +7,8 @@ import Mock from "mockjs";
 import api from "../../src/services/config";
 import { R } from "../../src/core/app.types";
 import { RequestMethod } from "../../src/core/rpc/types";
+import { assign } from "lodash";
+import { ServerResponse } from "http";
 
 // 统一结果返回规范
 export const result: R = {
@@ -98,7 +100,7 @@ export const getMockPre = function (key: string) {
  * @param {生成的个数} num
  */
 export const initMockData = function (mockBean = {}, num = 20) {
-  Object.assign(mockBean, MockBean);
+  assign(mockBean, MockBean);
   if (num < 1) num = 20;
   return Mock.mock({
     [`data|1-${num}`]: [mockBean],
@@ -111,24 +113,33 @@ export const initMockData = function (mockBean = {}, num = 20) {
  * @param {模拟的bean需要的字段} mockBean
  */
 export const createOne = function (mockBean?: any) {
-  Object.assign(mockBean, MockBean);
+  assign(mockBean, MockBean);
   return Mock.mock({
     [`data|1`]: [mockBean],
   }).data;
 };
 // console.log(createOne({name:'@cname'}))
 
-const viteMockPlugin = async (req:any, res:any) => {
-  let reqbody = "";
-  await new Promise((resolve) => {
-    req.on("data", (chunk) => {
-      reqbody += chunk;
-    });
-    req.on("end", () => resolve(undefined));
-  });
-  res.setHeader("Content-Type", "text/plain");
-  res.statusCode = 200;
-  res.end(`hello, ${reqbody}`);
+const viteMockRes = async (response: ServerResponse, result) => {
+  // response.setHeader("Content-Type", "text/plain");
+  console.log(`vite 写出mock`)
+  response.statusCode = 200;
+  response.end('result');
+};
+
+const webpackMockRes = async (response, result) => {
+  console.log(`webpack 写出mock`)
+  response.status(200).json(result);
+};
+
+const mockType = "vite";
+
+const write = (response, result) => {
+  if (mockType == "vite") {
+    return viteMockRes(response, result);
+  } else {
+    return webpackMockRes(response, result);
+  }
 };
 
 /**
@@ -137,8 +148,9 @@ const viteMockPlugin = async (req:any, res:any) => {
  * @param {data}  返回结果集
  */
 export const writeOk = function (response: any, data = {}) {
-  response.status(200).json(
-    Object.assign(
+  return write(
+    response,
+    assign(
       {
         code: "200",
         success: true,
@@ -156,8 +168,9 @@ export const writeOk = function (response: any, data = {}) {
  * @param {data}  返回结果集
  */
 export const writeFail = function (response: any, data = {}) {
-  response.json(
-    Object.assign(
+  return write(
+    response,
+    assign(
       {
         code: "500",
         success: false,
@@ -175,5 +188,5 @@ export const writeFail = function (response: any, data = {}) {
  * @param {data}  返回结果集
  */
 export const writeJson = function (response: any, data: any) {
-  response.json(data);
+  write(response, data);
 };
