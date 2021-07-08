@@ -59,6 +59,7 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
     },
     server: {
       port: 6060,
+      host: '0.0.0.0',
       proxy: {
         '/apiss': {
           target: 'http://127.0.0.1:6060/',
