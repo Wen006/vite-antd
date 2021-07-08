@@ -1,17 +1,9 @@
-/* eslint-disable no-console */
-/* eslint-disable func-names */
-/* eslint-disable camelcase */
-/* eslint-disable radix */
+
 /**
  * @description 日期工具
  * @author wennn
  * @time 20190624
  */
-/* eslint-disable no-extend-native */
-/* eslint-disable no-let */
-// eslint-disable-next-line no-extend-native
-// eslint-disable-next-line func-names
-// import moment from 'moment'
 import latest from "moment-timezone/data/meta/latest.json";
 import moment from "moment-timezone"; 
 

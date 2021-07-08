@@ -5,18 +5,13 @@
  * @FilePath: /my-antd/src/utils/app.config.ts
  * 好好学习、天天向上 >> 1432316105@qq.com
  */
-// import konph from 'konph'
-// const config = konph({
-//   'some-conf-item': {
-//     // Default item value.
-//     def: 'foobar'
-//   }
+import { setConf } from "../core/conf";
 
-import { setConfig } from "../core/utils/logger";
-
-// })
 export default {
     baseUrl:"/api"
 };
 
-setConfig({enable:true})
+setConf({
+    appName:"VITE"
+})
+ 

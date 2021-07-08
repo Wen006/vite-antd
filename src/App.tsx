@@ -15,9 +15,9 @@ import {
   Redirect,
 } from "react-router-dom"
 import { getRoutes } from './config/routes';
+import { Languages } from './core/app.types';
 import AppLayout from './layouts/AppLayout';
 import BasicLayout from './layouts/AppLayout';
-import { Languages } from './utils/app.types'
 
 import { getLang, getLocale } from './utils/web.util';
 
@@ -43,8 +43,15 @@ function App() {
   const [appState, setAppState] = useState<AppState>(appInitState)
 
   const app = {
-    appState,
-    setAppState,
+    setLang:(lang:Languages)=>{
+      return setAppState((state)=>{
+        return {
+          ...state,
+          language: lang,
+          locale: getLocale(lang)
+        }
+      })
+    }
   }
 
   return <ConfigProvider locale={appState.locale}>

@@ -10,7 +10,7 @@ import { callRpc } from '@/services/service.handler';
 import { Languages } from '@/core/app.types';
 import { setSessionUser } from '@/utils/web.util';
 import { box } from '@/componets/notice';
-import { setLang } from '../../../utils/web.util';
+import { getLang, setLang } from '../../../utils/web.util';
 import { BgCL } from '../../../componets/animation';
 import { GlobalOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { keys } from 'lodash';
@@ -25,8 +25,8 @@ const tailLayout = {
 
 const Login: React.FC<any> = (props: any) => {
 
-  const [submitting, setSubmitState] = useState<boolean>(false)
-
+  const [submitting, setSubmitState] = useState<boolean>(false);
+  const [lang, setL] = useState(getLang())
   const onFinish = (values: any) => {
     setSubmitState(true)
     callRpc({
@@ -52,9 +52,12 @@ const Login: React.FC<any> = (props: any) => {
     console.log('Failed:', errorInfo);
   };
 
-  function handleChange(value: Languages) {
-    console.log(`selected ${value}`);
-    setLang(value);
+  function handleChange({key}:{key:Languages}) {
+    console.log(`value`, key)
+    setL(key);
+    setLang(key);
+    props.app.setLang(key)
+    console.log(`this.props`, props)
   }
 
   const showLang: { [key: string]: string } = {
@@ -65,7 +68,7 @@ const Login: React.FC<any> = (props: any) => {
 
 
   const menu = (
-    <Menu onChange={handleChange}>
+    <Menu onClick={handleChange} selectedKeys={[lang]}>
       {
         keys(Languages).map((it:string) => {
           return <Menu.Item key={it}> {showLang[it] || it} </Menu.Item>

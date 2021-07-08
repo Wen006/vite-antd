@@ -201,7 +201,7 @@ export class Logger {
 const logger = new Logger()
 
 // 设置 日志 配置
-export const setConfig = (conf: Partial<Config>): void => {
+export const setLogConfig = (conf: Partial<Config>): void => {
   debugConfig = {
     ...debugConfig,
     ...conf,
@@ -226,7 +226,7 @@ export const initLogger = (loggerConf: any = {}) => {
     },
     loggerConf
   )
-  setConfig(loggerConfig)
+  setLogConfig(loggerConfig)
 }
 
 export default logger
