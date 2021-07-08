@@ -8,17 +8,15 @@ import {ConfigEnv, defineConfig, UserConfigExport} from 'vite'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import vitePluginImp from 'vite-plugin-imp'
 import { viteMockServe } from 'vite-plugin-mock';
-import Banner from 'vite-plugin-banner'
 import svgr from 'vite-plugin-svgr'
-import { getAliases } from "vite-aliases";
 import tsconfigPaths from 'vite-tsconfig-paths'
 import path from 'path'
 
-const aliases = getAliases();
  
 // https://vitejs.dev/config/
 export default ({ command }: ConfigEnv): UserConfigExport => {
   return {
+    mode: 'development',
     plugins: [ 
       viteMockServe({
         localEnabled: command === 'serve',
@@ -46,7 +44,9 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
     
     ],
     css: {
-      modules: {
+      modules:{
+        scopeBehaviour: 'local',
+        localsConvention: 'camelCaseOnly'
       },
       preprocessorOptions: {
         less: {
@@ -83,6 +83,7 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
         },
       ]
     },
+    
     optimizeDeps: {
       include: [
         '@ant-design/colors',

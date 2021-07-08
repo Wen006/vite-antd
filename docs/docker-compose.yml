@@ -1,0 +1,13 @@
+version: '2.0'
+
+services:
+  nginx:
+    restart: always
+    image: harbor01:9080/library/nginx:1.17
+    ports:
+      - 6061:6061
+    volumes:
+      - ./config/hosts:/etc/hosts
+      - ./config:/etc/nginx/conf.d
+      - ./log:/var/log/nginx
+      - ../dist:/var/www

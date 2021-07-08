@@ -1,16 +1,15 @@
-@login-form-w: 500px;
-@login-form-h: 310px;
+@login-form-w: 450px;
+@login-form-h: 280px;
 
 
 .login-main{
-    background-color: #f0ebf699;
     height: 100vh;
     form{
         width: @login-form-w;
         height: @login-form-h;
         margin: 0 auto;
         background: white;
-        padding: 20px;
+        padding: 35px 40px 10px 40px;
         position: fixed;
         top: 50%;
         left: 50%;
@@ -18,5 +17,21 @@
         margin-left: calc(-@login-form-w/2);
         border-radius: 4px;
         box-shadow: 1px 1px 4px #65626f;
+        background: #ffffffb5;
+        box-shadow: 4px 6px 4px 0px #5f3c3c;
+        text-align: center;
+        .login-btn{
+            width: 100%;
+        }
+    }
+
+    .language-panel{
+        position: fixed;
+        right: 20px;
+        top: 14px;
+        .language-select {
+            color: #f7f5ef;
+            font-size: 22px;
+        }
     }
 }

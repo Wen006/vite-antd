@@ -69,10 +69,11 @@ export default class RpcService {
       reqOpt.method = RequestMethod.POST;
       reqOpt.headers = Object.assign(reqOpt.headers, { "content-type": "application/x-www-form-urlencoded" });
       
-      if(params){
-        url = url + (url.includes("?")?stringify(params):`?${stringify(params)}`);
-      }
-      reqOpt.data = stringify(reqOpt.data||{});
+      // if(params){
+      //   url = url + (url.includes("?")?stringify(params):`?${stringify(params)}`);
+      // }else{
+      //   reqOpt.data = stringify(reqOpt.data||{});
+      // }
     }
 
     // 对于url占位符的参数处理

@@ -41,12 +41,14 @@ export const setSessionUser = (val:string):string => {
     return val;
 }
 
+export const clearSession = () =>{
+    sessionStorage.removeItem(perSetKey(USER_KEY));
+}
+
 export const getLocale = (lang?:string):Locale =>{
     lang = lang || getLang();
     return localMap[lang];
 }
-
-
 
 export const perSetKey = (key:string):string =>{
     return APP_KEY + "_" + key;

@@ -42,10 +42,18 @@ export default [
     },
   },
   {
+    url: `${context}/sys/user/logout`,
+    method: "post",
+    response: ({ query }) => {
+      return ok({});
+    },
+  },
+  {
     url: `${context}/sys/user/login`,
     method: "post",
     response: ({ query, body, headers, ...other }) => {
       const params = { ...query, ...body };
+      const { host } = headers;
       let user = undefined;
       userList.some((u) => {
         if (u.username == params.username && u.password == params.password) {
@@ -55,22 +63,6 @@ export default [
         return false;
       });
       return user ? ok(user) : fail("账号或者密码不对");
-    },
-  },
-  {
-    url: `${context}/sys/user/list`,
-    method: "get",
-    rawResponse: async (req:IncomingMessage,res:ServerResponse)=>{
-      let reqbody = '';
-      await new Promise((resolve) => {
-        req.on('data', (chunk) => {
-          reqbody += chunk;
-        });
-        req.on('end', () => resolve(undefined));
-      });
-      res.setHeader('Content-Type', 'text/plain');
-      res.statusCode = 200;
-      res.end(`hello, ${reqbody}`);
     }
-  },
+  }
 ] as MockMethod[];

@@ -1,5 +1,5 @@
 import React, { PureComponent, useState, useEffect } from 'react';
-import { Avatar } from 'antd';
+import { Avatar, Dropdown, Menu } from 'antd';
 import { SmileOutlined, UserOutlined } from '@ant-design/icons';
 import type { MenuDataItem, ProSettings } from '@ant-design/pro-layout';
 import ProLayout, { SettingDrawer } from '@ant-design/pro-layout';
@@ -8,6 +8,7 @@ import { RouteConfig } from '../config/routes/types';
 import PageRender from './PageRender';
 import { callRpc } from '../services/service.handler';
 import { useHistory, useLocation } from 'react-router-dom';
+import { clearSession, getSessionUser } from '../utils/web.util';
 
 type Menu = {
     icon: string,
@@ -83,20 +84,59 @@ const StandLayout: React.FC<{}> = ({ children, ...other }): React.ReactElement =
     const [settings, setSetting] = useState<Partial<ProSettings> | undefined>({ fixSiderbar: true });
     const [pathname, setPathname] = useState('/welcome');
     const [menus, setMenus] = useState<Array<MenuDataItem>>([])
+    const [user, setUser] = useState<{}>({})
+
     const history = useHistory();
     useEffect(() => {
+
+        const user = getSessionUser();
+        if (!user) {
+            clearSession();
+            history.push("login")
+            return;
+        }
+
+        setUser(user);
+
         callRpc({ key: 'sys.menu.get-menus' }).then(data => {
             if (data.success) {
                 const ms = menusToRoutes(data.data);
-                console.log(`ms`, ms)
-                console.log(`defaultProps`, defaultProps)
                 setMenus(ms)
             }
         })
+
+
         return () => {
             setMenus([])
         }
     }, [])
+
+    const handleMenuClick = (item: { key: string | number }) => {
+        if (item.key == "logout") {
+            callRpc({ key: "sys.user.logout" }).then(da => {
+                if (da.success) {
+                    clearSession();
+                    history.push("/login")
+                }
+            })
+        }
+
+    }
+
+    const menu = (
+        <Menu onClick={handleMenuClick}>
+            <Menu.Item key="logout" icon={<UserOutlined />}>
+                退出登录
+            </Menu.Item>
+            <Menu.Item key="switch-role" icon={<UserOutlined />}>
+                切换角色
+            </Menu.Item>
+            <Menu.Item key="switch-full" icon={<UserOutlined />}>
+                切换全屏
+            </Menu.Item>
+        </Menu>
+    );
+
 
     return (
         <div
@@ -157,12 +197,14 @@ const StandLayout: React.FC<{}> = ({ children, ...other }): React.ReactElement =
                             history.push(item.path || '');
                         }}
                     >
-                        {dom}xxx
+                        {dom}
                     </a>
                 )}
                 rightContentRender={() => (
                     <div>
-                        <Avatar shape="square" size="small" icon={<UserOutlined />} />
+                        <Dropdown.Button overlay={menu} placement="bottomCenter" icon={<Avatar shape="square" size="small" icon={<UserOutlined />} />}>
+                            admin
+                        </Dropdown.Button>
                     </div>
                 )}
                 {...settings}

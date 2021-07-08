@@ -136,7 +136,8 @@ const mockType = "vite";
 
 const write = (response, result) => {
   if (mockType == "vite") {
-    return viteMockRes(response, result);
+    // return viteMockRes(response, result);
+    return result;
   } else {
     return webpackMockRes(response, result);
   }
@@ -156,8 +157,7 @@ export const writeOk = function (response: any, data = {}) {
         success: true,
         data: data,
         msg: "操作成功",
-      },
-      result
+      }
     )
   );
 };
@@ -176,8 +176,7 @@ export const writeFail = function (response: any, data = {}) {
         success: false,
         data: data,
         msg: "操作失败",
-      },
-      result
+      }
     )
   );
 };
@@ -188,5 +187,5 @@ export const writeFail = function (response: any, data = {}) {
  * @param {data}  返回结果集
  */
 export const writeJson = function (response: any, data: any) {
-  write(response, data);
+  return write(response, data);
 };

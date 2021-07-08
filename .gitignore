@@ -10,7 +10,7 @@ yarn.lock
 
 node_modules
 *.log
-
+*.log.*
 
 ##### source mag
 .git

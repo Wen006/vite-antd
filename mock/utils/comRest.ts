@@ -31,8 +31,7 @@ export function queryByParams(req:any,resp:any){
     let newData = getTableData(mocktable)
     if(!newData){
         console.error("请确定配置services/config/*的tableName属性和dbDao.js 的数据源")
-        writeFail(resp,"数据库表获取失败！")
-        return ;
+        return writeFail(resp,"数据库表获取失败！") 
     }
     for (const key in other) {
         if ({}.hasOwnProperty.call(other, key)) {
@@ -44,19 +43,17 @@ export function queryByParams(req:any,resp:any){
             })
         }
     }
-    writeOk(resp, newData)
+    return writeOk(resp, newData)
 }
 
 export function comList(req, resp, mocktable) {
     const { body, query, headers,url } = req 
     const { pageNo = 1, pageSize = 10, sorter, ...other } = { ...body, ...query } // sorter :"menuCode_descend" ,"menuCode_ascend"
     other.deletedFlag = "0"
-    // let menuDate;
     let newData = getTableData(mocktable)
     if(!newData){
         console.error("请确定配置services/config/*的tableName属性和dbDao.js 的数据源")
-        writeFail(resp,"数据库表获取失败！")
-        return ;
+        return writeFail(resp,"数据库表获取失败！")
     }
     for (const key in other) {
         if ({}.hasOwnProperty.call(other, key)) {
@@ -72,8 +69,8 @@ export function comList(req, resp, mocktable) {
         data: newData.slice((pageNo - 1) * pageSize, pageNo * pageSize),
         total: newData.length,
     }
-    // console.log(headers,url)
-    writeOk(resp, retDatas)
+ 
+    return writeOk(resp, retDatas)
 }
 
 export function comSaveOrUpdate(req, resp, mocktable) {
@@ -81,9 +78,9 @@ export function comSaveOrUpdate(req, resp, mocktable) {
     const { ...params } = {...body,...query} 
     const ret = saveOrUpdate(mocktable,params)
     if(ret){
-        writeOk(resp,ret)
+       return writeOk(resp,ret)
     }else{
-        writeFail(resp,"不成功")
+       return writeFail(resp,"不成功")
     }
 }
 
@@ -93,9 +90,9 @@ export function comDel(req, resp,mocktable) {
     const  ids  = body
     const ret = deleteItem(mocktable,ids)
     if(ret > 0){
-        writeOk(resp,ret)
+        return writeOk(resp,ret)
     }else{
-        writeFail(resp,"删除不成功")
+       return writeFail(resp,"删除不成功")
     }
 }
 
@@ -105,9 +102,9 @@ export function comGetOne(req, resp,mocktable) {
     const { id ,...other} = { ...body, ...query }
     const item = getOne(mocktable,id)
     if(item){
-        writeOk(resp,item)
+        return writeOk(resp,item)
     }else{
-        writeFail(resp,"未找到")
+        return writeFail(resp,"未找到")
     }
 }
 

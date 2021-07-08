@@ -14,6 +14,12 @@ const configs:ServiceConfig = {
         "auth":"wennn",
         "desc":"用户登录"
     },
+    "sys.user.logout": {
+        "method":RequestMethod.POST,
+        "url":"/sys/user/logout",
+        "auth":"wennn",
+        "desc":"退出登录"
+    },
     "sys.user.login.captcha": {
         "method":RequestMethod.GET,
         "url":"/login/captcha?mobile={mobile}",

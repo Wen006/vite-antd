@@ -71,12 +71,13 @@ console.log("代理的mock：>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start")
 keys(api).forEach(key=>{
   const it = api[key];
     if(it["mock-handler"] && it["mock-table"]){
-      console.log(key+ " > "+it.url+" "+it.method)
+      console.log(key+ " > "+context+""+it.url+" "+it.method)
         apiProxy.push({
-            url: it.url,
+            url:context + it.url,
             method: m2t(it.method),
-            rawResponse: (r,rs) =>{
-              apiMange[it["mock-handler"]](r,rs,it["mock-table"])
+            response: ({ query, body, headers, ...other }) =>{
+              const req = { body, query, headers,...other };
+              return apiMange[it["mock-handler"]](req,{},it["mock-table"])
             }
         })
     }

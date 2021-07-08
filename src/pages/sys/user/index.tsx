@@ -3,22 +3,13 @@ import { PlusOutlined, EllipsisOutlined } from '@ant-design/icons';
 import { Button, Tag, Space, Menu, Dropdown } from 'antd';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable, { TableDropdown } from '@ant-design/pro-table';
-import { callRpc } from '@/services/service.handler';
+import { callRpc } from '../../../services/service.handler';
 
-type GithubIssueItem = {
-  url: string;
-  id: number;
-  number: number;
-  title: string;
-  labels: {
-    name: string;
-    color: string;
-  }[];
-  state: string;
-  comments: number;
-  created_at: string;
-  updated_at: string;
-  closed_at?: string;
+type GithubIssueItem = { 
+  id: number|string;
+  userName: string; 
+  age: number;
+  email: string; 
 };
 
 const columns: ProColumns<GithubIssueItem>[] = [
@@ -29,7 +20,7 @@ const columns: ProColumns<GithubIssueItem>[] = [
   },
   {
     title: '标题',
-    dataIndex: 'title',
+    dataIndex: 'userName',
     copyable: true,
     ellipsis: true,
     tip: '标题过长会自动收缩',
@@ -44,7 +35,7 @@ const columns: ProColumns<GithubIssueItem>[] = [
   },
   {
     title: '状态',
-    dataIndex: 'state',
+    dataIndex: 'age',
     filters: true,
     onFilter: true,
     valueType: 'select',
@@ -64,45 +55,12 @@ const columns: ProColumns<GithubIssueItem>[] = [
         status: 'Processing',
       },
     },
-  },
-  {
-    title: '标签',
-    dataIndex: 'labels',
-    search: false,
-    renderFormItem: (_, { defaultRender }) => {
-      return defaultRender(_);
-    },
-    render: (_, record) => (
-      <Space>
-        {record.labels.map(({ name, color }) => (
-          <Tag color={color} key={name}>
-            {name}
-          </Tag>
-        ))}
-      </Space>
-    ),
-  },
+  }, 
   {
     title: '创建时间',
-    key: 'showTime',
-    dataIndex: 'created_at',
-    valueType: 'date',
-    sorter: true,
+    key: 'email',
+    dataIndex: 'email',
     hideInSearch: true,
-  },
-  {
-    title: '创建时间',
-    dataIndex: 'created_at',
-    valueType: 'dateRange',
-    hideInTable: true,
-    search: {
-      transform: (value) => {
-        return {
-          startTime: value[0],
-          endTime: value[1],
-        };
-      },
-    },
   },
   {
     title: '操作',
@@ -145,13 +103,17 @@ export default () => {
     <ProTable<GithubIssueItem>
       columns={columns}
       actionRef={actionRef}
-    //   request={async (params = {}, sort, filter) => {
-    //     console.log(sort, filter);
-    //     // return callRpc()
-    //     return new Promise(r=>{
-    //         r([])
-    //     })
-    //   }}
+      request={async (params = {}, sort, filter) => {
+        console.log(sort, filter);
+        const rec = await callRpc({key:"sys.users",params:{
+          pageNo:params.current,
+          pageSize: params.pageSize,
+        }}) 
+        return {
+          ...rec.data,
+          success:rec.success
+        };
+      }}
       editable={{
         type: 'multiple',
       }}
