@@ -88,7 +88,6 @@ const StandLayout: React.FC<{}> = ({ children, ...other }): React.ReactElement =
 
     const history = useHistory();
     useEffect(() => {
-
         const user = getSessionUser();
         if (!user) {
             clearSession();

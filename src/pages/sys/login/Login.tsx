@@ -5,16 +5,16 @@
  * 好好学习、天天向上 >> 1432316105@qq.com
  */
 import React, { useState } from 'react';
-import { Form, Input, Button, Checkbox, Select, notification, message, Menu, Dropdown, Row } from 'antd';
+import { Form, Input, Button, Checkbox, Select, notification, message, Menu, Dropdown, Row, DatePicker } from 'antd';
 import { callRpc } from '@/services/service.handler';
 import { Languages } from '@/core/app.types';
 import { setSessionUser } from '@/utils/web.util';
 import { box } from '@/componets/notice';
-import { getLang, setLang } from '../../../utils/web.util';
 import { BgCL } from '../../../componets/animation';
 import { GlobalOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { keys } from 'lodash';
 import './index.less'
+import { createIntlCache, defineMessage, FormattedMessage, IntlProvider, RawIntlProvider } from 'react-intl';
 
 const layout = {
   wrapperCol: { span: 24 },
@@ -23,10 +23,18 @@ const tailLayout = {
   wrapperCol: { offset: 20, span: 10 },
 };
 
+// defineMessage({
+//   en_US:{
+//     'login.btn':"Login"
+//   },
+//   zh_CN:{
+//     'login.btn':"登录"
+//   }
+// })
+
 const Login: React.FC<any> = (props: any) => {
 
   const [submitting, setSubmitState] = useState<boolean>(false);
-  const [lang, setL] = useState(getLang())
   const onFinish = (values: any) => {
     setSubmitState(true)
     callRpc({
@@ -52,12 +60,8 @@ const Login: React.FC<any> = (props: any) => {
     console.log('Failed:', errorInfo);
   };
 
-  function handleChange({key}:{key:Languages}) {
-    console.log(`value`, key)
-    setL(key);
-    setLang(key);
+  function handleChange({ key }: { key: Languages }) {
     props.app.setLang(key)
-    console.log(`this.props`, props)
   }
 
   const showLang: { [key: string]: string } = {
@@ -66,21 +70,21 @@ const Login: React.FC<any> = (props: any) => {
     "en_US": "English",
   }
 
-
   const menu = (
-    <Menu onClick={handleChange} selectedKeys={[lang]}>
+    <Menu onClick={handleChange} selectedKeys={[props.app.language]}>
       {
-        keys(Languages).map((it:string) => {
+        keys(Languages).map((it: string) => {
           return <Menu.Item key={it}> {showLang[it] || it} </Menu.Item>
         })
       }
     </Menu>
   );
+ 
+
 
   return (
     <div className="login-main">
       <BgCL>
-
         <div className="language-panel">
           <div className="language-select">
             <Dropdown overlay={menu} placement="bottomLeft" arrow>
@@ -101,21 +105,21 @@ const Login: React.FC<any> = (props: any) => {
           >
             <Input prefix={<UserOutlined />} size="large" placeholder="请输入用户名" />
           </Form.Item>
-
           <Form.Item
             name="password"
             rules={[{ required: true, message: '请输入密码！' }]}
           >
             <Input.Password prefix={<LockOutlined />} size="large" placeholder="请输入密码" />
           </Form.Item>
-
           <Form.Item {...tailLayout} name="remember" valuePropName="checked">
             <Checkbox>记住</Checkbox>
           </Form.Item>
-
           <Form.Item>
             <Button shape="round" type="primary" htmlType="submit" size="middle" className="login-btn" loading={submitting} >
-              登录
+              <IntlProvider locale={'en-us'} messages={{'login.btn':"Login"}}>
+                登录
+                <FormattedMessage id="login.btn"></FormattedMessage>
+              </IntlProvider>
             </Button>
           </Form.Item>
         </Form>
