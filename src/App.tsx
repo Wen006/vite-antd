@@ -34,7 +34,7 @@ const routes = getRoutes();
 interface AppState {
   language: Languages,
   loading: boolean,
-  antLocale: Locale,
+  antLocale?: Locale,
   theme: 'default' | 'dark'
 }
 const lang = getLang();
@@ -42,43 +42,56 @@ const lang = getLang();
 function App() {
   const appInitState: AppState = {
     language: lang,
-    antLocale: getAntLocale(lang), // 多语言 阿里组件
     loading: false,
     theme: 'default'
   }
-  const [appState, setAppState] = useState<AppState>(appInitState)
+  const [appState, setAppState] = useState<AppState>(appInitState);
+  const [antLocale, setAntLocale] = useState<Locale>(); // 多语言 阿里组件
+
+  const switchLang = async (lang: Languages) => {
+    const locale: Locale = await getAntLocale(lang);
+    setLang(lang)
+    setAntLocale(locale);
+    console.log(`locale`, locale)
+  }
+
+  React.useEffect(() => {
+    switchLang(lang);
+    return () => {
+
+    }
+  }, [])
 
   const app = {
     language: appState.language,
     setLang: (lang: Languages) => {
-      setLang(lang)
-      return setAppState((state) => {
-        console.log(`getAntLocale(lang)`, getAntLocale(lang))
-        return {
-          ...state,
-          language: lang,
-          locale: getAntLocale(lang)
-        }
+      return switchLang(lang).then(() => {
+        setAppState((state) => {
+          return {
+            ...state,
+            language: lang,
+          }
+        })
       })
     }
   }
 
-  return <ConfigProvider locale={appState.antLocale}>
-      <Router>
-        <Switch>
-          <Redirect exact from="/" path="/" to="/login"></Redirect>
-          <Route path="/login" exact render={p => {
-            return <React.Suspense fallback={<div>加载登录页面</div>}><Login {...p} app={app}></Login></React.Suspense>
-          }}></Route>
-          <AppLayout
-            app={app}
-            path="/"
-            routes={routes}
-          >
-          </AppLayout>
-          <Redirect path="*" to="/404"></Redirect>
-        </Switch>
-      </Router>
+  return <ConfigProvider locale={antLocale}>
+    <Router>
+      <Switch>
+        <Redirect exact from="/" path="/" to="/login"></Redirect>
+        <Route path="/login" exact render={p => {
+          return <React.Suspense fallback={<div>加载登录页面</div>}><Login {...p} app={app}></Login></React.Suspense>
+        }}></Route>
+        <AppLayout
+          app={app}
+          path="/"
+          routes={routes}
+        >
+        </AppLayout>
+        <Redirect path="*" to="/404"></Redirect>
+      </Switch>
+    </Router>
   </ConfigProvider>
 }
 

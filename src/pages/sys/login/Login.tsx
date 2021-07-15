@@ -116,7 +116,7 @@ const Login: React.FC<any> = (props: any) => {
           </Form.Item>
           <Form.Item>
             <Button shape="round" type="primary" htmlType="submit" size="middle" className="login-btn" loading={submitting} >
-              <IntlProvider locale={'en-us'} messages={{'login.btn':"Login"}}>
+              <IntlProvider locale={'en-us'} messages={{'login.btn':"登录"}}>
                 登录
                 <FormattedMessage id="login.btn"></FormattedMessage>
               </IntlProvider>
