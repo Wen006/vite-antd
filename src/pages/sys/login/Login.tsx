@@ -4,48 +4,80 @@
  * @Description: 
  * 好好学习、天天向上 >> 1432316105@qq.com
  */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Checkbox, Select, notification, message, Menu, Dropdown, Row, DatePicker } from 'antd';
 import { callRpc } from '@/services/service.handler';
 import { Languages } from '@/core/app.types';
 import { setSessionUser } from '@/utils/web.util';
 import { box } from '@/componets/notice';
-import { BgCL } from '../../../componets/animation';
+import { BgCL } from '@/componets/animation';
 import { GlobalOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { keys } from 'lodash';
+import { getMessage, I18n } from '@/core/i18n';
+import { setStoreItem } from '@/core/cache/db';
+import lodash from 'lodash'
 import './index.less'
-import { createIntlCache, defineMessage, FormattedMessage, IntlProvider, RawIntlProvider } from 'react-intl';
+import { FormInstance, useForm } from 'antd/lib/form/Form';
+import { getStoreItem } from '../../../core/cache/db';
 
 const layout = {
   wrapperCol: { span: 24 },
 };
 const tailLayout = {
-  wrapperCol: { offset: 20, span: 10 },
+  wrapperCol: { offset: 14, span: 10 },
 };
-
-// defineMessage({
-//   en_US:{
-//     'login.btn':"Login"
-//   },
-//   zh_CN:{
-//     'login.btn':"登录"
-//   }
-// })
 
 const Login: React.FC<any> = (props: any) => {
 
   const [submitting, setSubmitState] = useState<boolean>(false);
+ 
+  const form = React.useRef<FormInstance>()
+
+  const storeUInfo = (v) =>{
+    setStoreItem("login.user",v);
+  }
+
+  const storeUInfoUp = () =>{
+    console.log(`form`, form)
+    const v = getStoreItem("login.user")
+    if(v){
+      form.current?.setFieldsValue({
+        ...v,
+        remember:true,
+      })
+    }else{
+      form.current?.setFieldsValue({
+        username:"",
+        password:"",
+        remember:false,
+      })
+    }
+  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      storeUInfoUp();
+    }, 500);
+    return () => {
+      
+    }
+  }, [])
+
   const onFinish = (values: any) => {
     setSubmitState(true)
     callRpc({
       key: "sys.user.login",
       params: values,
     }).then((data: any) => {
+      setSubmitState(false)
+
       if (data.success) {
-        setSessionUser(values)
+        setSessionUser(values);
+        if(values.remember){
+          storeUInfo(values);
+        }
 
         setTimeout(() => {
-          setSubmitState(false)
           props.history.push('/home')
         }, 1000);
       } else {
@@ -60,7 +92,7 @@ const Login: React.FC<any> = (props: any) => {
     console.log('Failed:', errorInfo);
   };
 
-  function handleChange({ key }: { key: Languages }) {
+  const handleChange = ({ key }: { key: Languages }) => {
     props.app.setLang(key)
   }
 
@@ -79,7 +111,7 @@ const Login: React.FC<any> = (props: any) => {
       }
     </Menu>
   );
- 
+
 
 
   return (
@@ -87,13 +119,14 @@ const Login: React.FC<any> = (props: any) => {
       <BgCL>
         <div className="language-panel">
           <div className="language-select">
-            <Dropdown overlay={menu} placement="bottomLeft" arrow>
+            <Dropdown mouseLeaveDelay={1} overlay={menu} placement="bottomLeft" arrow>
               <GlobalOutlined />
             </Dropdown>
           </div>
         </div>
         <Form
           {...layout}
+          ref={form}
           name="basic"
           initialValues={{ remember: true }}
           onFinish={onFinish}
@@ -101,25 +134,22 @@ const Login: React.FC<any> = (props: any) => {
         >
           <Form.Item
             name="username"
-            rules={[{ required: true, message: '请输入用户名!' }]}
+            rules={[{ required: true, message: getMessage({ id: 'login.enter.username' }) }]}
           >
-            <Input prefix={<UserOutlined />} size="large" placeholder="请输入用户名" />
+            <Input prefix={<UserOutlined />} size="large" placeholder={getMessage({ id: 'login.enter.username' })} />
           </Form.Item>
           <Form.Item
             name="password"
-            rules={[{ required: true, message: '请输入密码！' }]}
+            rules={[{ required: true, message: getMessage({ id: "login.enter.passwd" }) }]}
           >
-            <Input.Password prefix={<LockOutlined />} size="large" placeholder="请输入密码" />
+            <Input.Password prefix={<LockOutlined />} size="large" placeholder={getMessage({ id: "login.enter.passwd" })} />
           </Form.Item>
           <Form.Item {...tailLayout} name="remember" valuePropName="checked">
-            <Checkbox>记住</Checkbox>
+            <Checkbox><I18n id="login.remember"></I18n></Checkbox>
           </Form.Item>
           <Form.Item>
             <Button shape="round" type="primary" htmlType="submit" size="middle" className="login-btn" loading={submitting} >
-              <IntlProvider locale={'en-us'} messages={{'login.btn':"登录"}}>
-                登录
-                <FormattedMessage id="login.btn"></FormattedMessage>
-              </IntlProvider>
+              <I18n id="login.btn" />
             </Button>
           </Form.Item>
         </Form>

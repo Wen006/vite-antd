@@ -40,7 +40,7 @@ export const getAntLocale = async (lang: string): Promise<Locale> => {
   return lo.default||lo;
 };
 
-const localeObj = {
+const localeMap = {
   'en_US':[()=>import("./locale/en_US")],
   'zh_CN':[()=>import("./locale/zh_CN")],
   'ja_JP':[()=>import("./locale/ja_JP")],
@@ -48,7 +48,7 @@ const localeObj = {
   [key:string]:Array<()=>Promise<any>>
 }
 
-let message:{[key:string]:any} = {
+let cacheMessages:{[lang:string]:any} = {
 
 }
 
@@ -58,16 +58,28 @@ export const addLocale = (config:{
   for (const key in config) {
     if (Object.prototype.hasOwnProperty.call(config, key)) {
       const temLocale = Array.isArray(config[key])?config[key]:[config[key]]
-        if(localeObj[key]){
-          localeObj[key].concat(temLocale);
+        if(localeMap[key]){
+          localeMap[key]=localeMap[key].concat(temLocale);
         }else{
-          localeObj[key] = temLocale;
+          localeMap[key] = temLocale;
         }
-      
     }
   }
+  console.log(`localeMap`, localeMap)
 }
 
 export const getAppLocale = async (lang: string): Promise<any> => {
-  return Promise.resolve({})
+  if(cacheMessages[lang]){
+    return cacheMessages[lang];
+  }
+  if(localeMap[lang]){
+    const allPromise = localeMap[lang].map(it=>it())
+    const i18nArr = (await Promise.all(allPromise)).map(d=>d.default||d);
+    cacheMessages[lang] = {};
+    i18nArr.forEach(it=>{
+      cacheMessages[lang] = {...cacheMessages[lang],...it}
+    })
+    return cacheMessages[lang];
+  }
+  return {};
 }
