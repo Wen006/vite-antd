@@ -128,8 +128,8 @@
 - 通过 nrm工具 
 
   ```shell
-  nrm add haier http://npm.haier.net/
-  nrm use haier
+  nrm add taobao http://registry.npm.taobao.org/
+  nrm use taobao
   ```
 
 #### 2. 工程运行不起来
